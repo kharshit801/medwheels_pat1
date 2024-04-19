@@ -10,6 +10,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
+    String[] gender_array ={"Male","Female","Non-binary","Others"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

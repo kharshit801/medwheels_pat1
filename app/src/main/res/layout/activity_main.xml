@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.9"
-                    android:text="SIGNUP AS A DOCTOR" />
+                    android:text="REGISTER AS A PATIENT" />
 
 
                 <LinearLayout
@@ -106,7 +106,7 @@
                     android:text="NAME:" />
 
                 <EditText
-                    android:id="@+id/name_doc"
+                    android:id="@+id/name_pat"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                     android:text="EMAIL:" />
 
                 <EditText
-                    android:id="@+id/email_doc"
+                    android:id="@+id/email_pat"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
 
 
                 <EditText
-                    android:id="@+id/pass_doc"
+                    android:id="@+id/pass_pat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName" />
@@ -161,7 +161,230 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/K4"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="DATE OF BIRTH:" />
 
+
+                <EditText
+                    android:id="@+id/dob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your Date Of Birth"
+                    android:inputType="date" />
+
+
+                <View
+                    android:id="@+id/J765875674432"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/K4543"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="CURRENT ADDRESS:" />
+
+
+                <EditText
+                    android:id="@+id/cur_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Give Your Current Address"
+                    android:inputType= "textPostalAddress" />
+
+                <View
+                    android:id="@+id/J765875"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:hint="SELECT GENDER">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/GENDER"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:id="@+id/J7658776875"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:hint="SELECT BLOOD GROUP">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/Blood_grp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <View
+                    android:id="@+id/J76587567765"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/K867"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="ALLERGIES (if any):" />
+
+
+                <EditText
+                    android:id="@+id/allergies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+                <View
+                    android:id="@+id/J7658776"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <TextView
+                    android:id="@+id/K65"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="MEDICAL HISTORY (if any):" />
+
+
+                <EditText
+                    android:id="@+id/medical_conditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+                <View
+                    android:id="@+id/J816382534"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <!-- Emergency Contact Name -->
+                <TextView
+                    android:id="@+id/K86777"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="EMERGENCY CONTACT NAME :" />
+
+
+                <EditText
+                    android:id="@+id/emergency_contact_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Emergency Contact Name"
+                    android:inputType="number" />
+
+                <View
+                    android:id="@+id/J816382534764"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <!-- Emergency Contact Name -->
+                <TextView
+                    android:id="@+id/K867775432"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="RELATIONSHIP TO PATIENT:" />
+
+
+                <EditText
+                    android:id="@+id/relation_pat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Relation with Patient"
+                    android:inputType="text" />
+
+                <View
+                    android:id="@+id/J816"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <!-- Emergency Contact Name -->
+                <TextView
+                    android:id="@+id/K867775"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="PHONE NUMBER (EMERGENCY CONTACT) " />
+
+
+                <EditText
+                    android:id="@+id/phone_rela"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Relation with Patient"
+                    android:inputType="number" />
+
+                <View
+                    android:id="@+id/J81656"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <!-- Emergency Contact Name -->
+                <TextView
+                    android:id="@+id/K8677"
+                    android:fontFamily="@font/regular_semi_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:text="ADDITIONAL NOTES: " />
+
+
+                <EditText
+                    android:id="@+id/additional_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Additional Notes:"
+                    android:inputType="number" />
+
+
+
+                <View
+                    android:id="@+id/J8163825734"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <!-- Relationship to Patient -->
 
 
                 <!--            android:drawableEnd="@drawable/ic_baseline_done_24"/>-->
