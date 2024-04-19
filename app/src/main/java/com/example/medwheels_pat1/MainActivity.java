@@ -1,10 +1,12 @@
 package com.example.medwheels_pat1;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     String BloodGroup,Gender,blood_d,gender_d;
     String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
     String[] gender_array ={"Male","Female","Non-binary","Others"};
+    Button finishButton;
 
 AutoCompleteTextView bloodgroupTextView,genderTextView;
 ArrayAdapter<String> bloodgroupItems,genderItems;
@@ -28,6 +31,17 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        finishButton = findViewById(R.id.finishBtn);
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,home.class);
+                startActivity(intent);
+            }
+        });
+
 
         bloodgroupTextView = findViewById(R.id.blood_group_pat);
 
@@ -58,6 +72,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 gender_d = adapterView.getItemAtPosition(i).toString().trim();
             }
         });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

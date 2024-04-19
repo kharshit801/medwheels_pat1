@@ -43,6 +43,9 @@ public class PowerButtonService extends Service {
                         Log.d(TAG, "Triple click detected!");
                         clickCount = 0;
                     }
+                    else {
+                        Log.d(TAG, "Triple click not detected!");
+                    }
                 }
             }
 
