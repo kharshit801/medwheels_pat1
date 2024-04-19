@@ -11,4 +11,13 @@
         android:layout_height="match_parent"
         android:textSize="100sp"
         android:text="you are secured!"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/uplodeFirebase_btn"
+        android:text="uplode to firebase"
+        tools:layout_editor_absoluteX="-27dp"
+        tools:layout_editor_absoluteY="302dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

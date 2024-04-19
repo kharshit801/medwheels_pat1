@@ -2,6 +2,7 @@ package com.example.medwheels_pat1;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
     String[] gender_array ={"Male","Female","Non-binary","Others"};
     EditText sname, email, password, additionalNotes,phone, emergencyRelation,emergencyName,medHistory,allergies,dob,address;
     Button finishButton;
+    String permission[]={"android.permission.WRITE_EXTERNAL_STORAG"};
+    public static final String SHARED_PREFS="sharedPrefs_pat";
+
+
 AutoCompleteTextView bloodgroupTextView,genderTextView;
 ArrayAdapter<String> bloodgroupItems,genderItems;
 
@@ -93,9 +98,25 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 String med=medHistory.getText().toString();
                 String all=allergies.getText().toString();
                 String Dob=dob.getText().toString();
-                HelperClass helperClass = new HelperClass(mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d);
-                Intent intent = new Intent(MainActivity.this,home.class);
 
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("mail", mail);
+                editor.putString("name", name);
+                editor.putString("pass", pass);
+                editor.putString("addNotes", addNotes);
+                editor.putString("add", add);
+                editor.putString("Phone", Phone);
+                editor.putString("emName", emName);
+                editor.putString("emRela", emRela);
+                editor.putString("med", med);
+                editor.putString("all", all);
+                editor.putString("Dob", Dob);
+                editor.putString("gender_d", gender_d);
+                editor.putString("blood_d", blood_d);
+                editor.apply();
+
+                Intent intent = new Intent(MainActivity.this,home.class);
                 startActivity(intent);
             }
         });

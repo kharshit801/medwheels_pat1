@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1051135422485",
+    "project_id": "medwheels-4b07d",
+    "storage_bucket": "medwheels-4b07d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051135422485:android:98ec04f9fcdc8b967e9e1c",
+        "android_client_info": {
+          "package_name": "com.example.medwheels_pat1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDvhY_UFg18D7GHJ-PGf0kp2tMJ9kcPSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
