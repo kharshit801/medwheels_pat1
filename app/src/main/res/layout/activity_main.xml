@@ -403,9 +403,16 @@
                     android:letterSpacing="0.06"
                     android:layout_gravity="center"
                     android:text="Finish" />
+                <fragment
+                    android:id="@+id/map1"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
 
 
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
     </ScrollView>
 </RelativeLayout>

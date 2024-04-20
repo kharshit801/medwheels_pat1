@@ -6,7 +6,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,10 +31,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -49,19 +59,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     String BloodGroup,Gender,blood_d,gender_d;
     String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
     String[] gender_array ={"Male","Female","Non-binary","Others"};
     EditText sname, email, password, additionalNotes,phone, emergencyRelation,emergencyName,medHistory,allergies,dob,address;
+    double longitude,latitude;
     Button finishButton, browseButton;
     ImageView uplodedImage;
     String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob;
     String imageURL;
     String sos = "0";
+//    double latitude = 25.431474; // IIIT ALLAHABAD
+//    double longitude = 81.770500;
 
     Uri uri;
+    private GoogleMap googleMap;
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private Circle locationCircle;
     String permission[]={"android.permission.WRITE_EXTERNAL_STORAG"};
     String per[]={"android.permission.READ_MEDIA_IMAGES"};
     private static final int CAMERA_PERMISSION_CODE = 200;
@@ -80,6 +97,13 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
 
         sname=findViewById(R.id.name_pat);
@@ -170,6 +194,8 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 med=medHistory.getText().toString();
                 all=allergies.getText().toString();
                 Dob=dob.getText().toString();
+                longitude = 25.431474;
+                latitude = 81.770500;
 
 
 
@@ -185,6 +211,12 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
     }
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -265,7 +297,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 FirebaseDatabase database = FirebaseDatabase.getInstance("https://medwheels-4b07d-default-rtdb.asia-southeast1.firebasedatabase.app");
                 DatabaseReference reference = database.getReference("patient");
 
-                HelperClass helperClass = new HelperClass(mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,imageURL,sos);
+                HelperClass helperClass = new HelperClass(mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,imageURL,sos,longitude,latitude);
                 reference.child(mail.replace(".",",")).setValue(helperClass)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -288,5 +320,70 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
 
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocation();
+        }
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        enableMyLocation();
+        getDeviceLocation();
+    }
+
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+            getDeviceLocation();
+        }
+    }
+    private void getDeviceLocation() {
+        // Set the desired latitude and longitude
+
+        LatLng desiredLocation = new LatLng(25.431474, 81.770500);
+        googleMap.addMarker(new MarkerOptions().position(desiredLocation).title("Desired Location"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(desiredLocation, 15f));
+
+        // Draw a circle around the desired location
+        if (desiredLocation != null) {
+            if (locationCircle != null) {
+                locationCircle.remove();
+            }
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(desiredLocation)
+                    .radius(500)
+                    .fillColor(0xE2856E)
+                    .strokeColor(0x1e1e1e)
+                    .strokeWidth(5);
+            locationCircle = googleMap.addCircle(circleOptions);
+
+            // Calculate the distance between your current location and the desired location
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+//                            calculateDistance(currentLocation, desiredLocation);
+                        }
+                    });
+        }
+    }
+
+
 
 }

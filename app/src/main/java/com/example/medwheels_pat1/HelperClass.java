@@ -1,11 +1,11 @@
 package com.example.medwheels_pat1;
 public class HelperClass {
     String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,image,sos;
-
+    double longitude,latitude;
     public HelperClass() {
     }
 
-    public HelperClass(String mail, String pass, String name, String addNotes, String add, String phone, String emName, String emRela, String med, String all, String dob, String gender_d, String blood_d, String image, String sos) {
+    public HelperClass(String mail, String pass, String name, String addNotes, String add, String phone, String emName, String emRela, String med, String all, String dob, String gender_d, String blood_d, String image, String sos,double longitude,double latitude) {
         this.mail = mail;
         this.pass = pass;
         this.name = name;
@@ -21,6 +21,8 @@ public class HelperClass {
         this.blood_d = blood_d;
         this.image = image;
         this.sos = sos;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public String getMail() {
@@ -142,4 +144,12 @@ public class HelperClass {
     public void setSos(String sos) {
         this.sos = sos;
     }
+
+    public double getLongitude(){return  longitude;}
+
+    public  void setLongitude(double longitude){this.longitude = longitude;}
+
+    public  double getLatitude(){return  latitude;}
+
+    public void setLatitude(double latitude){this.latitude = latitude;}
 }
