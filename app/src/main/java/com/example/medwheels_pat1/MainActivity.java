@@ -65,14 +65,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
     String[] gender_array ={"Male","Female","Non-binary","Others"};
     EditText sname, email, password, additionalNotes,phone, emergencyRelation,emergencyName,medHistory,allergies,dob,address;
-    double longitude,latitude;
+//    double longitude,latitude;
     Button finishButton, browseButton;
     ImageView uplodedImage;
     String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob;
     String imageURL;
     String sos = "0";
-//    double latitude = 25.431474; // IIIT ALLAHABAD
-//    double longitude = 81.770500;
+    double latitude = 25.431474; // IIIT ALLAHABAD
+    double longitude = 81.770500;
 
     Uri uri;
     private GoogleMap googleMap;
