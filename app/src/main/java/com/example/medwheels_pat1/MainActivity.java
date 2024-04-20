@@ -84,6 +84,7 @@ final static int REQUEST_CODE = 1232;
     String sos = "0";
     double latitude = 25.431474; // IIIT ALLAHABAD
     double longitude = 81.770500;
+    String hashpass;
 
     Uri uri;
     private GoogleMap googleMap;
@@ -221,7 +222,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 longitude = 25.431474;
                 latitude = 81.770500;
 
-
+                hashpass = Hash.hashedPassword(pass);
 
                 uplodeToDatabase();
 
@@ -321,7 +322,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 FirebaseDatabase database = FirebaseDatabase.getInstance("https://medwheels-4b07d-default-rtdb.asia-southeast1.firebasedatabase.app");
                 DatabaseReference reference = database.getReference("patient");
 
-                HelperClass helperClass = new HelperClass(mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,imageURL,sos,longitude,latitude);
+                HelperClass helperClass = new HelperClass(mail,hashpass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,imageURL,sos,longitude,latitude);
                 reference.child(mail.replace(".",",")).setValue(helperClass)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -398,13 +399,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         myPDFDocument.close();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            enableMyLocation();
-        }
-    }
+    
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -419,6 +414,10 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
             googleMap.setMyLocationEnabled(true);
             getDeviceLocation();
         }
+
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            enableMyLocation();
+//        }
     }
     private void getDeviceLocation() {
         // Set the desired latitude and longitude
@@ -441,7 +440,8 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
             locationCircle = googleMap.addCircle(circleOptions);
 
             // Calculate the distance between your current location and the desired location
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
