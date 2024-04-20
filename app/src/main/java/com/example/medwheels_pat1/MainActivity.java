@@ -134,16 +134,16 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         browseButton=findViewById(R.id.browse_btn);
         uplodedImage = findViewById(R.id.uploaded_img);
 
-       btnCreatePdf = findViewById(R.id.finishBtn);
-
-        btnCreatePdf.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                createPDF();
-            } else {
-                requestWriteExternalStoragePermission();
-            }
-        });
+//       btnCreatePdf = findViewById(R.id.finishBtn);
+//
+//        btnCreatePdf.setOnClickListener(v -> {
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//                createPDF();
+//            } else {
+//                requestWriteExternalStoragePermission();
+//            }
+//        });
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,8 +218,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                 med=medHistory.getText().toString();
                 all=allergies.getText().toString();
                 Dob=dob.getText().toString();
-                longitude = 25.431474;
-                latitude = 81.770500;
+
 
 
 
@@ -301,7 +300,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
 
     public void uplodeToDatabase(){
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Doctor Images")
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Patient Images")
                 .child(uri.getLastPathSegment());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -354,21 +353,21 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                createPDF();
-            } else {
-                if (shouldShowRequestPermissionRationale) {
-                    Toast.makeText(this, "Write External Storage permission is required to create PDF", Toast.LENGTH_LONG).show();
-                } else {
-                    openAppSettings();
-                }
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                createPDF();
+//            } else {
+//                if (shouldShowRequestPermissionRationale) {
+//                    Toast.makeText(this, "Write External Storage permission is required to create PDF", Toast.LENGTH_LONG).show();
+//                } else {
+//                    openAppSettings();
+//                }
+//            }
+//        }
+//    }
     private void openAppSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
