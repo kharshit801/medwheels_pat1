@@ -305,7 +305,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Emergency Contact Name"
-                    android:inputType="number" />
+                    android:inputType="text" />
 
                 <View
                     android:id="@+id/J816382534764"
@@ -374,7 +374,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Additional Notes:"
-                    android:inputType="number" />
+                    android:inputType="text" />
 
 
 
