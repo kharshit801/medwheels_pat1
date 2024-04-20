@@ -10,11 +10,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import androidx.core.content.ContextCompat;
+
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -38,7 +43,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -70,7 +74,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
 final static int REQUEST_CODE = 1232;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private SensorEventListener sensorEventListener;
+    private static final float JERK_THRESHOLD = 20f; // Adjust this value as needed
     String BloodGroup,Gender,blood_d,gender_d;
     String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
     String[] gender_array ={"Male","Female","Non-binary","Others"};
@@ -111,6 +120,8 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -119,6 +130,30 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
             mapFragment.getMapAsync(this);
         }
 
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    float x = event.values[0];
+                    float y = event.values[1];
+                    float z = event.values[2];
+
+                    // Calculate the magnitude of the acceleration vector
+                    double magnitude = Math.sqrt(x * x + y * y + z * z);
+
+                    // Check if the magnitude exceeds the jerk threshold
+                    if (magnitude > JERK_THRESHOLD) {
+                        // Jerk detected, send  the SOS
+                        sendTheSOS();
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                // Not used in this example
+            }
+        };
 
 
         sname=findViewById(R.id.name_pat);
@@ -135,16 +170,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         browseButton=findViewById(R.id.browse_btn);
         uplodedImage = findViewById(R.id.uploaded_img);
 
-//       btnCreatePdf = findViewById(R.id.finishBtn);
 //
-//        btnCreatePdf.setOnClickListener(v -> {
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//                createPDF();
-//            } else {
-//                requestWriteExternalStoragePermission();
-//            }
-//        });
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,6 +268,22 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(sensorEventListener);
+    }
+    private void sendTheSOS() {
+        Intent intent = new Intent(this, home.class);///SOS bhejde bhai
+        startActivity(intent);
+    }
+
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
