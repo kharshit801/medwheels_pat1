@@ -41,9 +41,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class home extends AppCompatActivity  {
     public static final String SHARED_PREFS = "sharedPrefs_pat";
     TextView sos;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +64,6 @@ public class home extends AppCompatActivity  {
             return insets;
         });
 
-
-
     }
-
-
 
 }
