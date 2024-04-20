@@ -1,5 +1,7 @@
 package com.example.medwheels_pat1;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,12 +28,22 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     EditText sname, email, password, additionalNotes,phone, emergencyRelation,emergencyName,medHistory,allergies,dob,address;
     Button finishButton, browseButton;
     ImageView uplodedImage;
+    String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob;
+    String imageURL;
+    String sos = "0";
 
     Uri uri;
     String permission[]={"android.permission.WRITE_EXTERNAL_STORAG"};
@@ -143,34 +159,21 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mail=email.getText().toString();
-                String name=sname.getText().toString();
-                String pass=password.getText().toString();
-                String addNotes=additionalNotes.getText().toString();
-                String add=address.getText().toString();
-                String Phone=phone.getText().toString();
-                String emName=emergencyName.getText().toString();
-                String emRela=emergencyRelation.getText().toString();
-                String med=medHistory.getText().toString();
-                String all=allergies.getText().toString();
-                String Dob=dob.getText().toString();
+                mail=email.getText().toString();
+                name=sname.getText().toString();
+                pass=password.getText().toString();
+                addNotes=additionalNotes.getText().toString();
+                add=address.getText().toString();
+                Phone=phone.getText().toString();
+                emName=emergencyName.getText().toString();
+                emRela=emergencyRelation.getText().toString();
+                med=medHistory.getText().toString();
+                all=allergies.getText().toString();
+                Dob=dob.getText().toString();
 
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("mail", mail);
-                editor.putString("name", name);
-                editor.putString("pass", pass);
-                editor.putString("addNotes", addNotes);
-                editor.putString("add", add);
-                editor.putString("Phone", Phone);
-                editor.putString("emName", emName);
-                editor.putString("emRela", emRela);
-                editor.putString("med", med);
-                editor.putString("all", all);
-                editor.putString("Dob", Dob);
-                editor.putString("gender_d", gender_d);
-                editor.putString("blood_d", blood_d);
-                editor.apply();
+
+
+                uplodeToDatabase();
 
                 Intent intent = new Intent(MainActivity.this,home.class);
                 startActivity(intent);
@@ -238,6 +241,52 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path);
+    }
+
+    public void uplodeToDatabase(){
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Doctor Images")
+                .child(uri.getLastPathSegment());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!((Task<?>) uriTask).isComplete());
+                Uri urlImage = uriTask.getResult();
+                imageURL = urlImage.toString();
+
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                FirebaseDatabase database = FirebaseDatabase.getInstance("https://medwheels-4b07d-default-rtdb.asia-southeast1.firebasedatabase.app");
+                DatabaseReference reference = database.getReference("patient");
+
+                HelperClass helperClass = new HelperClass(mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,imageURL,sos);
+                reference.child(mail.replace(".",",")).setValue(helperClass)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Data uploaded successfully: " + helperClass.toString());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "Error uploading data: " + e.getMessage());
+                            }
+                        });
+
+                Toast.makeText(MainActivity.this,"success",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+
     }
 
 }

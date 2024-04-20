@@ -1,24 +1,26 @@
 package com.example.medwheels_pat1;
 public class HelperClass {
-    String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d;
+    String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob,gender_d,blood_d,image,sos;
 
     public HelperClass() {
     }
 
-    public HelperClass(String mail, String pass, String name, String addNotes, String add, String phone, String emName, String emRela, String med, String all, String dob, String gender_d, String blood_d) {
+    public HelperClass(String mail, String pass, String name, String addNotes, String add, String phone, String emName, String emRela, String med, String all, String dob, String gender_d, String blood_d, String image, String sos) {
         this.mail = mail;
         this.pass = pass;
         this.name = name;
         this.addNotes = addNotes;
         this.add = add;
-        Phone = phone;
+        this.Phone = phone;
         this.emName = emName;
         this.emRela = emRela;
         this.med = med;
         this.all = all;
-        Dob = dob;
+        this.Dob = dob;
         this.gender_d = gender_d;
         this.blood_d = blood_d;
+        this.image = image;
+        this.sos = sos;
     }
 
     public String getMail() {
@@ -123,5 +125,21 @@ public class HelperClass {
 
     public void setBlood_d(String blood_d) {
         this.blood_d = blood_d;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getSos() {
+        return sos;
+    }
+
+    public void setSos(String sos) {
+        this.sos = sos;
     }
 }
