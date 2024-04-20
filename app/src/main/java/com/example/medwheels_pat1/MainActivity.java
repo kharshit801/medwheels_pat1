@@ -6,6 +6,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -282,6 +283,15 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
     private void sendTheSOS() {
         Intent intent = new Intent(this, home.class);///SOS bhejde bhai
         startActivity(intent);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String Email_of_pat = sharedPreferences.getString("patmail", "");
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://medwheels-4b07d-default-rtdb.asia-southeast1.firebasedatabase.app");
+        DatabaseReference emailRef = database.getReference("patient").child(Email_of_pat.replace(".",",")).child("sos");
+
+        emailRef.setValue("1");
+
     }
 
 
@@ -377,6 +387,11 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
                                 Log.e(TAG, "Error uploading data: " + e.getMessage());
                             }
                         });
+
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("patmail", mail);
+                editor.apply();
 
                 Toast.makeText(MainActivity.this,"success",Toast.LENGTH_SHORT).show();
 
