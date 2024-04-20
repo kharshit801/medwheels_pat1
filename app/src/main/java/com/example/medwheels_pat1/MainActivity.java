@@ -9,9 +9,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+import androidx.core.content.ContextCompat;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,17 +63,21 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+final static int REQUEST_CODE = 1232;
     String BloodGroup,Gender,blood_d,gender_d;
     String [] blood_group_array = {"A+","A-","B+","B-","O+","O-","AB+","AB-"};
     String[] gender_array ={"Male","Female","Non-binary","Others"};
     EditText sname, email, password, additionalNotes,phone, emergencyRelation,emergencyName,medHistory,allergies,dob,address;
 //    double longitude,latitude;
     Button finishButton, browseButton;
+    Button btnCreatePdf;
     ImageView uplodedImage;
     String mail,pass,name,addNotes,add,Phone,emName,emRela,med,all,Dob;
     String imageURL;
@@ -85,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String PERMISSION_USE_CAMERA = Manifest.permission.CAMERA;
     private static final int PERMISSION_REQUIRED_CODE = 100;
     public static final String SHARED_PREFS="sharedPrefs_pat";
+    private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 101;
+    private boolean shouldShowRequestPermissionRationale = false;
 
 
 AutoCompleteTextView bloodgroupTextView,genderTextView;
@@ -106,6 +119,7 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         }
 
 
+
         sname=findViewById(R.id.name_pat);
         email=findViewById(R.id.email_pat);
         password=findViewById(R.id.pass_pat);
@@ -120,6 +134,16 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
         browseButton=findViewById(R.id.browse_btn);
         uplodedImage = findViewById(R.id.uploaded_img);
 
+       btnCreatePdf = findViewById(R.id.finishBtn);
+
+        btnCreatePdf.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                createPDF();
+            } else {
+                requestWriteExternalStoragePermission();
+            }
+        });
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,6 +343,59 @@ ArrayAdapter<String> bloodgroupItems,genderItems;
 
 
 
+    }
+    private void requestWriteExternalStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, "Write External Storage permission is required to create PDF", Toast.LENGTH_LONG).show();
+            shouldShowRequestPermissionRationale = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                createPDF();
+            } else {
+                if (shouldShowRequestPermissionRationale) {
+                    Toast.makeText(this, "Write External Storage permission is required to create PDF", Toast.LENGTH_LONG).show();
+                } else {
+                    openAppSettings();
+                }
+            }
+        }
+    }
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+    private void createPDF() {
+        PdfDocument myPDFDocument = new PdfDocument();
+        Paint myPaint = new Paint();
+
+        PdfDocument.PageInfo myPageInfo1 = new PdfDocument.PageInfo.Builder(250, 400, 1).create();
+
+        PdfDocument.Page myPage1 = myPDFDocument.startPage(myPageInfo1);
+        Canvas canvas = myPage1.getCanvas();
+
+        canvas.drawText("Welcome", 40, 50, myPaint);
+        myPDFDocument.finishPage(myPage1);
+
+        File file = new File(Environment.getExternalStorageDirectory(), "/FirstPDF.pdf");
+
+        try {
+            myPDFDocument.writeTo(new FileOutputStream(file));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        myPDFDocument.close();
     }
 
     @Override
